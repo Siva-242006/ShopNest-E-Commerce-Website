@@ -20,7 +20,6 @@ const fetchGeolocation = async (req, res, next) => {
       lat: null,
       lon: null,
     };
-    console.log(`Request from IP: ${clientIp}, Location: Localhost`);
     return next();
   }
 

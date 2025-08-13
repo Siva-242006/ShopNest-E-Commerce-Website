@@ -35,12 +35,10 @@ const CartPage = () => {
     }
   }, [userId]);
 
-  // Set page title
   useEffect(() => {
     document.title = "Cart";
   }, []);
 
-  // JWT auth check and fetch cart
   useEffect(() => {
     const jwt = localStorage.getItem("jwt_token");
     if (!jwt) {
@@ -50,12 +48,10 @@ const CartPage = () => {
     }
   }, [navigate, fetchCart]);
 
-  // Set cart counter whenever cartList updates
   useEffect(() => {
     setCartCount(cartList.length);
   }, [cartList, setCartCount]);
 
-  // Total price calculation
   useEffect(() => {
     const total = cartList.reduce((sum, item) => {
       const qty = quantities[item.product._id] || 1;
@@ -64,7 +60,6 @@ const CartPage = () => {
     setTotalPrice(total);
   }, [quantities, cartList]);
 
-  // Update quantity in backend
   const updateQuantity = async (productId, quantity) => {
     try {
       const res = await fetch(`${apiUrl}/cart/update`, {
@@ -81,7 +76,6 @@ const CartPage = () => {
     }
   };
 
-  // Delete product from cart
   const deleteProduct = async (productId) => {
     try {
       const res = await fetch(`${apiUrl}/cart/${userId}/${productId}`, {
@@ -95,7 +89,6 @@ const CartPage = () => {
     }
   };
 
-  // Clear the entire cart
   const clearCart = async () => {
     try {
       const res = await fetch(`${apiUrl}/cart/${userId}`, {
@@ -110,7 +103,6 @@ const CartPage = () => {
     }
   };
 
-  // Increment quantity
   const onIncrement = (productId, stock) => {
     const currentQty = quantities[productId] || 1;
     if (currentQty < stock) {
@@ -118,7 +110,6 @@ const CartPage = () => {
     }
   };
 
-  // Decrement quantity
   const onDecrement = (productId) => {
     const currentQty = quantities[productId] || 1;
     if (currentQty > 1) {

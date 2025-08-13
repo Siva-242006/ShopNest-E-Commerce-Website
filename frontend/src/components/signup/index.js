@@ -16,7 +16,7 @@ const Signup = () => {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showPassword, setShowPassword] = useState(false) // 👈 new state
+  const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -144,7 +144,6 @@ const Signup = () => {
 
         <select name="role" value={formData.role} onChange={handleChange}>
           <option value="User">User</option>
-          <option value="Admin">Admin</option>
         </select>
 
         <button type="submit" disabled={isSubmitting}>
