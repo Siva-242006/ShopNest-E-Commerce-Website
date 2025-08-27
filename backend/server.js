@@ -71,6 +71,9 @@ mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.error("MongoDB connection error:", err));
 
+app.get('/', (req, res) => {
+  res.send('Your backend API is running!');
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
