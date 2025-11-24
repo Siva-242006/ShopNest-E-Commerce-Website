@@ -2,7 +2,7 @@
   text-decoration: none;
   color: inherit;
   width: fit-content;
-  margin-right: 4rem;
+  margin-right: 1rem;
 }
 
 /* Base Layout */
@@ -73,7 +73,7 @@
 .home-products-row {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.9rem;
+  gap: 1rem;
 }
 
 /* Product Card */
