@@ -10,6 +10,7 @@ import AddOrUpdateProductForm from "./components/addOrUpdateProduct/addOrUpdateP
 import OrdersPage from "./components/ordersPage/ordersPage";
 import ProfilePage from './components/profilePage/profilePage';
 import Logs from './components/logsPage/logsPage';
+import NotFound from './components/notFound/notFound';
 import './App.css';
 
 const App = () => {
@@ -27,7 +28,7 @@ const App = () => {
             <Route path="/checkout" element={<CheckoutPage/>} />
             <Route path="/orders" element={<OrdersPage/>} />
             <Route path="/logs" element={<Logs />} />
-            <Route path="*" element={<h1>Page Not Found</h1>} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 }

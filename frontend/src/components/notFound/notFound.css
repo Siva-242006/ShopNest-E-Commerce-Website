@@ -1,0 +1,83 @@
+.not-found-page {
+  min-height: calc(100vh - 74px);
+  padding: 40px clamp(16px, 5vw, 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7f9fc;
+  color: #1f2937;
+}
+
+.not-found-card {
+  width: min(100%, 620px);
+  padding: clamp(28px, 6vw, 48px);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  text-align: center;
+}
+
+.not-found-card span {
+  display: inline-flex;
+  margin-bottom: 16px;
+  padding: 7px 12px;
+  background: #e0ecff;
+  border-radius: 999px;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.not-found-card h1 {
+  margin: 0;
+  color: #111827;
+  font-size: clamp(30px, 5vw, 44px);
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.not-found-card p {
+  max-width: 460px;
+  margin: 12px auto 24px;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.not-found-actions button {
+  min-height: 44px;
+  padding: 11px 18px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.not-found-actions button:hover {
+  background-color: #1d4ed8;
+}
+
+.not-found-actions .not-found-secondary {
+  background-color: #f1f5f9;
+  color: #334155;
+}
+
+.not-found-actions .not-found-secondary:hover {
+  background-color: #e2e8f0;
+}
+
+@media (max-width: 520px) {
+  .not-found-actions {
+    flex-direction: column;
+  }
+}

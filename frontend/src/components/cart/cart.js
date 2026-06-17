@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUserDetails } from "../../context/UserContext";
 import { useCart } from "../../context/CartContext";
-import "./cart.css";
+import { useUserDetails } from "../../context/UserContext";
 import Navbar from "../navbar/navbar";
+import "./cart.css";
 
 const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -15,7 +15,7 @@ const CartPage = () => {
 
   const { userId } = useUserDetails();
   const { setCartCount } = useCart();
-  
+
   const fetchCart = useCallback(async () => {
     try {
       const res = await fetch(`${apiUrl}/cart/${userId}`);
@@ -126,74 +126,87 @@ const CartPage = () => {
     <>
       <Navbar />
       <div className="cart-page">
-        <h1>Shopping Cart</h1>
-        {cartList.length === 0 ? (
-          <p>Your cart is empty.</p>
-        ) : (
-          <div className="cart-items">
-            {cartList.map((item) => (
-              <div key={item.product._id} className="cart-item">
-                <img
-                  src={item.product.image}
-                  alt={item.product.name}
-                  className="cart-item-image"
-                />
-                <div className="cart-item-details">
-                  <h2>{item.product.name}</h2>
-                  <p>Brand: {item.product.brand}</p>
-                  <p>
-                    Price: ₹{item.product.price.toLocaleString()}{" "}
-                    {item.product.currency}
-                  </p>
+        <div className="cart-header">
+          <h1>Shopping Cart</h1>
+          <p>Review your items and adjust quantities before checkout.</p>
+        </div>
 
-                  <div className="quantity-controls">
-                    <button onClick={() => onDecrement(item.product._id)}>-</button>
-                    <input
-                      type="text"
-                      value={quantities[item.product._id] || 1}
-                      readOnly
-                      className="quantity-display"
-                    />
-                    <button
-                      onClick={() =>
-                        onIncrement(item.product._id, item.product.stock)
-                      }
-                      disabled={
-                        quantities[item.product._id] >= item.product.stock
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
-
-                  <button
-                    className="delete-button"
-                    onClick={() => deleteProduct(item.product._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
+        <div className="cart-layout">
+          <div className="cart-items-panel">
+            {cartList.length === 0 ? (
+              <div className="cart-empty-state">
+                <h2>Your cart is empty.</h2>
+                <p>Add products to your cart and they will appear here.</p>
+                <button type="button" onClick={() => navigate("/products")}>
+                  Browse Products
+                </button>
               </div>
-            ))}
+            ) : (
+              <div className="cart-items">
+                {cartList.map((item) => (
+                  <div key={item.product._id} className="cart-item">
+                    <div className="cart-item-image-wrap">
+                      <img src={item.product.image} alt={item.product.name} className="cart-item-image" />
+                    </div>
+
+                    <div className="cart-item-details">
+                      <div>
+                        <h2>{item.product.name}</h2>
+                        <p className="cart-item-brand">{item.product.brand}</p>
+                      </div>
+
+                      <p className="cart-item-price">
+                        Rs. {item.product.price.toLocaleString()} {item.product.currency}
+                      </p>
+
+                      <div className="cart-item-actions">
+                        <div className="quantity-controls">
+                          <button onClick={() => onDecrement(item.product._id)}>-</button>
+                          <input
+                            type="text"
+                            value={quantities[item.product._id] || 1}
+                            readOnly
+                            className="quantity-display"
+                          />
+                          <button
+                            onClick={() => onIncrement(item.product._id, item.product.stock)}
+                            disabled={quantities[item.product._id] >= item.product.stock}
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        <button className="delete-button" onClick={() => deleteProduct(item.product._id)}>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        )}
-        <div className="cart-summary">
-          <h2>Cart Summary</h2>
-          <p>Total Items: {cartList.length}</p>
-          <p>Total Price: ₹{totalPrice.toLocaleString()}</p>
-          <button onClick={clearCart} className="clear-cart-button">
-            Clear Cart
-          </button>
-          <button
-            onClick={() =>
-              cartList.length > 0
-                ? onCheckoutClick()
-                : alert("Cart is Empty.")
-            }
-            className="checkout-button"
-          >
-            Checkout
-          </button>
+
+          <div className="cart-summary">
+            <h2>Cart Summary</h2>
+            <div className="summary-row">
+              <span>Total Items</span>
+              <strong>{cartList.length}</strong>
+            </div>
+            <div className="summary-row total-row">
+              <span>Total Price</span>
+              <strong>Rs. {totalPrice.toLocaleString()}</strong>
+            </div>
+            <button onClick={clearCart} className="clear-cart-button" disabled={cartList.length === 0}>
+              Clear Cart
+            </button>
+            <button
+              onClick={() => (cartList.length > 0 ? onCheckoutClick() : alert("Cart is Empty."))}
+              className="checkout-button"
+            >
+              Checkout
+            </button>
+          </div>
         </div>
       </div>
     </>

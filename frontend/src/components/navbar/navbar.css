@@ -1,116 +1,170 @@
-/* --- Navbar Container --- */
-nav {
+.site-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px clamp(16px, 4vw, 42px);
   background: linear-gradient(90deg, #2c3e50, #4ca1af);
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  flex-wrap: wrap;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16);
 }
 
-/* --- Brand Logo --- */
 .brand {
-  font-size: 1.8rem;
-  font-weight: 700;
   color: #ffffff;
   text-decoration: none;
-  transition: transform 0.3s ease;
+  font-size: clamp(24px, 4vw, 30px);
+  font-weight: 800;
+  letter-spacing: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .brand:hover {
-  transform: scale(1.05);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
-/* --- Nav Links --- */
 .nav-links {
   display: flex;
-  gap: 20px;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 18px;
 }
 
 .link {
-  font-size: 1.1rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: #ffffff;
   text-decoration: none;
-  font-weight: 500;
-  transition: all 0.25s ease;
-  position: relative;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  transition: color 0.2s ease;
 }
 
 .link::after {
-  content: '';
-  display: block;
-  width: 0%;
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+  width: 0;
   height: 2px;
   background: #f0c040;
-  transition: width 0.3s;
-  position: absolute;
-  bottom: -4px;
-  left: 0;
+  border-radius: 999px;
+  transition: width 0.25s ease;
 }
 
-.link:hover::after {
-  width: 100%;
-}
-
-.link:hover {
+.link:hover,
+.active-link {
   color: #f0c040;
 }
 
-/* --- Cart Count Bubble --- */
-.cart-count {
-  display: inline-block;
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: #5687f0;
-  background-color: #f8f5f4;
-  border-radius: 50%;
-  padding: 4px 9px;
-  margin-left: 1px;
-  vertical-align: top;
-  transition: background 0.3s ease;
+.link:hover::after,
+.active-link::after {
+  width: 100%;
 }
 
-/* --- Auth Button --- */
+.cart-count {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #2c3e50;
+  background-color: #ffffff;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .auth-btn {
+  padding: 9px 16px;
   background-color: #f0c040;
   color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
   border: none;
+  border-radius: 9px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
+  font-size: 15px;
+  font-weight: 800;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .auth-btn:hover {
   background-color: #ffb300;
-  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(240, 192, 64, 0.22);
+  transform: translateY(-1px);
 }
 
-/* --- Responsive: Small Screens --- */
-@media (max-width: 767px) {
-  nav {
-    flex-direction: column;
-    align-items: flex-start;
+.nav-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.nav-toggle:focus-visible,
+.link:focus-visible,
+.auth-btn:focus-visible,
+.brand:focus-visible {
+  outline: 3px solid rgba(240, 192, 64, 0.35);
+  outline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .site-navbar {
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
   }
 
   .nav-links {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    flex-basis: 100%;
     flex-direction: column;
-    width: 100%;
-    gap: 12px;
-    margin-top: 10px;
+    align-items: stretch;
+    gap: 8px;
+    transition: max-height 0.25s ease, padding-top 0.25s ease;
   }
 
-  .link, .auth-btn {
-    width: 100%;
+  .nav-links-open {
+    max-height: 420px;
+    padding-top: 12px;
   }
 
+  .link,
   .auth-btn {
-    padding: 10px;
-    text-align: center;
+    width: 100%;
+    min-height: 42px;
+    justify-content: space-between;
+    padding: 11px 12px;
+    border-radius: 10px;
+  }
+
+  .link {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .link::after {
+    display: none;
+  }
+
+  .link:hover,
+  .active-link {
+    background: rgba(255, 255, 255, 0.16);
   }
 }

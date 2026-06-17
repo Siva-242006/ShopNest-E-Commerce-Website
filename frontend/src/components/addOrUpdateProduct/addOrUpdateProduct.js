@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUserDetails } from "../../context/UserContext";
+import Navbar from "../navbar/navbar";
 import "./addOrUpdateProduct.css";
 
 const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -118,77 +119,94 @@ const AddOrUpdateProductForm = () => {
     }
   };
 
-  if (role !== "Admin") return null;
+  if (role !== "Admin") {
+    return (
+      <>
+        <Navbar />
+        <div className="admin-product-page">
+          <div className="admin-access-card">Access Denied: Only admins can manage products.</div>
+        </div>
+      </>
+    );
+  }
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">{id ? "Update" : "Add"} Product</h2>
-      {loading ? (
-        <p className="loading-text">Loading...</p>
-      ) : (
-        <form onSubmit={handleSubmit} className="product-form">
-          <label>
-            Name:
-            <input name="name" value={product.name} onChange={handleChange} required />
-          </label>
+    <>
+      <Navbar />
+      <div className="admin-product-page">
+        <div className="form-container">
+          <div className="form-header">
+            <h2 className="form-title">{id ? "Update" : "Add"} Product</h2>
+            <p>{id ? "Edit product details and inventory." : "Create a new product listing for your store."}</p>
+          </div>
+          {loading ? (
+            <p className="loading-text">Loading...</p>
+          ) : (
+            <form onSubmit={handleSubmit} className="product-form">
+              <label>
+                Name
+                <input name="name" value={product.name} onChange={handleChange} required />
+              </label>
 
-          <label>
-            Description:
-            <textarea name="description" value={product.description} onChange={handleChange} required />
-          </label>
+              <label>
+                Description
+                <textarea name="description" value={product.description} onChange={handleChange} required />
+              </label>
 
-          <label>
-            Price:
-            <input type="number" name="price" value={product.price} onChange={handleChange} required />
-          </label>
+              <label>
+                Price
+                <input type="number" name="price" value={product.price} onChange={handleChange} required />
+              </label>
 
-          <label>
-            Image URL:
-            <input name="image" value={product.image} onChange={handleChange} required />
-          </label>
+              <label>
+                Image URL
+                <input name="image" value={product.image} onChange={handleChange} required />
+              </label>
 
-          <label>
-            Brand:
-            <input name="brand" value={product.brand} onChange={handleChange} required />
-          </label>
+              <label>
+                Brand
+                <input name="brand" value={product.brand} onChange={handleChange} required />
+              </label>
 
-          <label>
-            Category:
-            <select value={product.category} onChange={handleCategoryChange} required>
-              <option value="">Select Category</option>
-              {categories.map((cat) => (
-                <option key={cat._id} value={cat.name}>{cat.name}</option>
-              ))}
-              <option value="add-new">Add New Category</option>
-            </select>
-          </label>
+              <label>
+                Category
+                <select value={product.category} onChange={handleCategoryChange} required>
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat.name}>{cat.name}</option>
+                  ))}
+                  <option value="add-new">Add New Category</option>
+                </select>
+              </label>
 
-          {isAddingNewCategory && (
-            <div className="add-new-category">
-              <input
-                type="text"
-                placeholder="Enter new category"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-              />
-              <button type="button" onClick={handleNewCategorySubmit}>
-                Add
+              {isAddingNewCategory && (
+                <div className="add-new-category">
+                  <input
+                    type="text"
+                    placeholder="Enter new category"
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                  />
+                  <button type="button" onClick={handleNewCategorySubmit}>
+                    Add
+                  </button>
+                </div>
+              )}
+
+              <label>
+                Stock
+                <input type="number" name="stock" value={product.stock} onChange={handleChange} required />
+              </label>
+
+              <button type="submit" className="submit-btn" disabled={loading}>
+                {id ? "Update" : "Add"} Product
               </button>
-            </div>
+            </form>
           )}
-
-          <label>
-            Stock:
-            <input type="number" name="stock" value={product.stock} onChange={handleChange} required />
-          </label>
-
-          <button type="submit" className="submit-btn" disabled={loading}>
-            {id ? "Update" : "Add"} Product
-          </button>
-        </form>
-      )}
-      {error && <p className="error-message">{error}</p>}
-    </div>
+          {error && <p className="error-message">{error}</p>}
+        </div>
+      </div>
+    </>
   );
 };
 

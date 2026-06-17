@@ -62,18 +62,22 @@ const ProfilePage = () => {
   return (
     <>
     <Navbar/>
-    <div className="profile-container">
-      <h2>My Profile</h2>
+    <div className="profile-page">
+      <div className="profile-container">
+      <div className="profile-header">
+        <h2>My Profile</h2>
+        <p>View your account details and update your password securely.</p>
+      </div>
 
       {message && <p className="message error">{message}</p>}
       {success && <p className="message success">{success}</p>}
 
       {user ? (
         <div className="profile-box">
-          <p><strong>Name:</strong> {user.name}</p>
-          <p><strong>Username:</strong> {user.username}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Role:</strong> {user.role}</p>
+          <div><span>Name</span><strong>{user.name}</strong></div>
+          <div><span>Username</span><strong>{user.username}</strong></div>
+          <div><span>Email</span><strong>{user.email}</strong></div>
+          <div><span>Role</span><strong>{user.role}</strong></div>
         </div>
       ) : (
         <p>Loading user data...</p>
@@ -104,6 +108,7 @@ const ProfilePage = () => {
         />
         <button type="submit">Update Password</button>
       </form>
+      </div>
     </div>
     </>
   );

@@ -27,7 +27,6 @@ const Logs = () => {
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
       const data = await res.json();
-      console.log( "logs",data)
       setLogs(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error fetching logs:", err);
@@ -82,18 +81,25 @@ const Logs = () => {
     <>
       <Navbar />
       <div className="logs-container">
-        <h2>System Logs</h2>
-        {loading ? (
-          <p>Loading logs...</p>
-        ) : error ? (
-          <p className="error">{error}</p>
-        ) : logs.length === 0 ? (
-          <p>No logs found.</p>
-        ) : (
-          <>
+        <div className="logs-header">
+          <div>
+            <h2>System Logs</h2>
+            <p>Review recent activity, device details, and access locations.</p>
+          </div>
+          {logs.length > 0 && !loading && !error && (
             <button className="delete-button" onClick={handleDeleteAllLogs}>
               Delete All Logs
             </button>
+          )}
+        </div>
+        {loading ? (
+          <p className="logs-state">Loading logs...</p>
+        ) : error ? (
+          <p className="error">{error}</p>
+        ) : logs.length === 0 ? (
+          <p className="logs-state">No logs found.</p>
+        ) : (
+          <>
             <div className="logs-table-container">
               <table>
                 <thead>

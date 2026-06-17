@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaHome, FaStar } from "react-icons/fa";
 import Navbar from "../navbar/navbar";
 import "./home.css";
 
@@ -10,27 +10,35 @@ const Home = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     document.title = "ShopNest | Your Ultimate Shopping Destination";
   }, []);
 
   useEffect(() => {
-          const jwt = localStorage.getItem("jwt_token");
-          if (!jwt) {
-            navigate("/login");
-          }
+    const jwt = localStorage.getItem("jwt_token");
+    if (!jwt) {
+      navigate("/login");
+    }
   }, [navigate]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true);
+      setError("");
+
       try {
         const response = await fetch(`${apiUrl}/products`);
+        if (!response.ok) {
+          throw new Error("Unable to load products");
+        }
+
         const data = await response.json();
-        setProducts(data);
+        setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Failed to load products", error);
+        setError("Failed to load products. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -44,48 +52,88 @@ const Home = () => {
     window.scrollTo(0, 0);
   };
 
-  const featured = products.filter(p => p.avgRating >= 4.5).slice(0, 5).sort((a, b) => b.avgRating - a.avgRating);
-  const newArrivals = [...products].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
-  const limitedStock = products.filter(p => p.stock <= 5).slice(0, 5);
-  const topReviewed = [...products].sort((a, b) => b.numReviews - a.numReviews).slice(0, 5);
-  const categories = [...new Set(products.map(p => p.category))].slice(0, 5);
+  const availableProducts = products.filter((product) => product.stock > 0);
+  const featured = availableProducts
+    .filter((product) => product.avgRating >= 4.5)
+    .sort((a, b) => b.avgRating - a.avgRating)
+    .slice(0, 5);
+  const newArrivals = [...availableProducts]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 5);
+  const limitedStock = availableProducts
+    .filter((product) => product.stock <= 5)
+    .slice(0, 5);
+  const topReviewed = [...availableProducts]
+    .sort((a, b) => b.numReviews - a.numReviews)
+    .slice(0, 5);
+  const categories = [...new Set(availableProducts.map((product) => product.category).filter(Boolean))].slice(0, 5);
 
   const renderProducts = (items) =>
-    items.map(item => (
-      item.stock <= 0 ? null : (
-      <Link to={`/products/${item._id}`} className="home-product-link" key={item._id}>
-      <div className="home-product-card">
-        <img src={item.image} alt={item.name} />
-        <h4>{item.name}</h4>
-        <p>₹{item.price}</p>
-        <span className="rating">{item.avgRating.toFixed(1)}</span>
-        {item.stock <= 5 && <p className="limited-stock">Only {item.stock} left!</p>}
-      </div>
-      </Link> )
-    ));
+    items.length > 0 ? (
+      items.map((item) => (
+        <Link to={`/products/${item._id}`} className="home-product-link" key={item._id}>
+          <div className="home-product-card">
+            {item.stock <= 5 && <span className="limited-stock">Only {item.stock} left!</span>}
+            <img src={item.image} alt={item.name} />
+            <h4>{item.name}</h4>
+            <div className="home-card-footer">
+              <p className="home-product-price">Rs. {item.price}</p>
+              <span className="rating">
+                <FaStar aria-hidden="true" /> {(item.avgRating || 0).toFixed(1)}
+              </span>
+            </div>
+          </div>
+        </Link>
+      ))
+    ) : (
+      <p className="home-empty-state">Products will appear here soon.</p>
+    );
 
   return (
     <>
       <Navbar />
       {isLoading ? (
-        <div className="loading-spinner">Loading...</div>
+        <div className="loading-spinner">
+          <span className="home-loader"></span>
+          <p>Loading...</p>
+        </div>
+      ) : error ? (
+        <div className="home-page">
+          <div className="home-error-state">
+            <h2>{error}</h2>
+            <button type="button" onClick={() => window.location.reload()}>
+              Try Again
+            </button>
+          </div>
+        </div>
       ) : (
         <div className="home-page">
           <div className="hero-section">
             <FaHome className="home-icon" />
             <h1>Welcome to ShopNest</h1>
             <p>Discover trending products, new arrivals & more!</p>
-            <button onClick={onClickHandler}>Go to Shopping</button>
+            <button type="button" onClick={onClickHandler}>
+              Go to Shopping
+            </button>
           </div>
 
           <section className="home-section">
             <h2>Shop by Category</h2>
             <div className="category-grid">
-              {categories.map(cat => (
-                <div className="category-card" key={cat} onClick={() => navigate(`/products?category=${encodeURIComponent(cat)}`)}>
-                  <span>{cat}</span>
-                </div>
-              ))}
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <button
+                    type="button"
+                    className="category-card"
+                    key={category}
+                    onClick={() => navigate(`/products?category=${encodeURIComponent(category)}`)}
+                  >
+                    <span>{category}</span>
+                  </button>
+                ))
+              ) : (
+                <p className="home-empty-state">No categories available yet.</p>
+              )}
             </div>
           </section>
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { FaEnvelope, FaLock, FaRegEye, FaRegEyeSlash, FaUser, FaUserTag } from "react-icons/fa"
 import "./index.css"
 
 const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -94,65 +95,122 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <form className="signup-form" onSubmit={handleSubmit}>
-        <h2>Signup</h2>
-
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-
-        <div className="password-field">
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Password (min 6 characters)"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <label>
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={() => setShowPassword((prev) => !prev)}
-            />{" "}
-            Show Password
-          </label>
+        <div className="signup-header">
+          <span className="signup-badge">ShopNest</span>
+          <h2>Create account</h2>
+          <p>Join ShopNest and start your shopping journey.</p>
         </div>
 
-        <select name="role" value={formData.role} onChange={handleChange}>
-          <option value="User">User</option>
-        </select>
+        <div className="signup-field">
+          <label htmlFor="name">Name</label>
+          <div className="signup-input-wrapper">
+            <FaUser className="signup-input-icon" aria-hidden="true" />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter your name"
+              value={formData.name}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              autoComplete="name"
+              required
+            />
+          </div>
+        </div>
 
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Signing up..." : "Signup"}
+        <div className="signup-field">
+          <label htmlFor="email">Email</label>
+          <div className="signup-input-wrapper">
+            <FaEnvelope className="signup-input-icon" aria-hidden="true" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              autoComplete="email"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="signup-field">
+          <label htmlFor="username">Username</label>
+          <div className="signup-input-wrapper">
+            <FaUserTag className="signup-input-icon" aria-hidden="true" />
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Choose a username"
+              value={formData.username}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              autoComplete="username"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="signup-field">
+          <label htmlFor="password">Password</label>
+          <div className="signup-input-wrapper">
+            <FaLock className="signup-input-icon" aria-hidden="true" />
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              placeholder="Minimum 6 characters"
+              value={formData.password}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              autoComplete="new-password"
+              className="signup-password-input"
+              required
+            />
+            <button
+              type="button"
+              className="signup-password-toggle"
+              onClick={() => setShowPassword((prev) => !prev)}
+              disabled={isSubmitting}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+            </button>
+          </div>
+        </div>
+
+        <div className="signup-field">
+          <label htmlFor="role">Account type</label>
+          <select
+            id="role"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            disabled={isSubmitting}
+          >
+            <option value="User">User</option>
+          </select>
+        </div>
+
+        <button type="submit" className="signup-submit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <span className="signup-button-loading">
+              <span className="signup-spinner"></span>
+              Creating account...
+            </span>
+          ) : (
+            "Create account"
+          )}
         </button>
 
         {error && <p className="error">{error}</p>}
         {success && <p className="success">{success}</p>}
       </form>
+      <p className="login-link">Already have an account? <Link to="/login">Login</Link></p>
     </div>
   )
 }
