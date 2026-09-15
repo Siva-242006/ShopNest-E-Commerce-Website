@@ -21,9 +21,10 @@ const CartPage = () => {
       const res = await fetch(`${apiUrl}/cart/${userId}`);
       const data = await res.json();
       if (res.ok && data.items) {
-        setCartList(data.items);
+        const validItems = data.items.filter((item) => item && item.product);
+        setCartList(validItems);
         const initialQuantities = {};
-        data.items.forEach((item) => {
+        validItems.forEach((item) => {
           initialQuantities[item.product._id] = item.quantity || 1;
         });
         setQuantities(initialQuantities);
@@ -54,8 +55,9 @@ const CartPage = () => {
 
   useEffect(() => {
     const total = cartList.reduce((sum, item) => {
+      if (!item || !item.product) return sum;
       const qty = quantities[item.product._id] || 1;
-      return sum + item.product.price * qty;
+      return sum + (item.product.price || 0) * qty;
     }, 0);
     setTotalPrice(total);
   }, [quantities, cartList]);
