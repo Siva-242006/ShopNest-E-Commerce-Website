@@ -167,7 +167,10 @@ const OrdersPage = () => {
                 <ul className="order-item-images-container">
                   {order.items?.map((item, idx) => (
                     <li key={idx}>
-                      <img src={item.product.image} alt={item.product.name} />
+                      <img
+                        src={item.product?.image || "https://via.placeholder.com/100"}
+                        alt={item.product?.name || "Product is not available"}
+                      />
                     </li>
                   ))}
                 </ul>
@@ -228,13 +231,13 @@ const OrdersPage = () => {
                           <li key={idx} className="order-item-detail">
                             <img
                               src={item.product?.image || "https://via.placeholder.com/100"}
-                              alt={item.product?.name}
+                              alt={item.product?.name || "Product is not available"}
                               className="product-image"
                             />
                             <div className="item-info">
-                              <span>{item.product?.name}</span>
+                              <span>{item.product?.name || "Product is not available"}</span>
                               <span className="item-price">
-                                Qty: {item.quantity} - Rs. {(item.product?.price * item.quantity)?.toLocaleString()}
+                                Qty: {item.quantity} {item.product?.price ? `- Rs. ${(item.product.price * item.quantity).toLocaleString()}` : ""}
                               </span>
                             </div>
                           </li>
