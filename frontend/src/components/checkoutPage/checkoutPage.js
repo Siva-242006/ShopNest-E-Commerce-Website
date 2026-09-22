@@ -41,6 +41,9 @@ const CheckoutPage = () => {
   );
 
   const handleProceed = async () => {
+    // Prevent duplicate executions if an order is already being placed
+    if (isPlacingOrder) return;
+
     if (!submittedAddress || cartItems.length === 0) {
       return alert("Missing address or cart empty");
     }

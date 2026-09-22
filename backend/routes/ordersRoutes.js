@@ -24,6 +24,25 @@ router.post("/orders/add", protect, async (req, res) => {
       return res.status(400).json({ message: "No items in the order." });
     }
 
+    // ------------------------------------------------------------------------
+    // DUPLICATE ORDER PREVENTION GUARD:
+    // Check if an order from the same user with the same total amount was created
+    // within the last 30 seconds to prevent double submissions or network retries.
+    // ------------------------------------------------------------------------
+    const thirtySecondsAgo = new Date(Date.now() - 30 * 1000);
+    const existingDuplicate = await Order.findOne({
+      user: req.user.id,
+      totalAmount: totalAmount,
+      createdAt: { $gte: thirtySecondsAgo }
+    });
+
+    if (existingDuplicate) {
+      return res.status(409).json({
+        message: "Duplicate order submission detected. Your order is already being processed.",
+        order: existingDuplicate
+      });
+    }
+
     const order = new Order({
       user: req.user.id,
       items,
@@ -34,13 +53,22 @@ router.post("/orders/add", protect, async (req, res) => {
 
     const savedOrder = await order.save();
 
-    items.forEach(async (each) => {
-      const product = await Product.findById(each.product._id);
-      if (product) {
-        product.stock -= each.quantity;
-        product.save();
+    // ------------------------------------------------------------------------
+    // ATOMIC INVENTORY STOCK DECREMENT:
+    // Decrements stock atomically at MongoDB engine level with stock >= qty check
+    // to prevent race conditions and inventory double-selling.
+    // ------------------------------------------------------------------------
+    for (const each of items) {
+      const productId = each.product?._id || each.product;
+      const updatedProduct = await Product.findOneAndUpdate(
+        { _id: productId, stock: { $gte: each.quantity } },
+        { $inc: { stock: -each.quantity } },
+        { new: true }
+      );
+      if (!updatedProduct) {
+        return res.status(400).json({ message: "Product is out of stock or has insufficient inventory." });
       }
-    });
+    }
 
     await Cart.findOneAndUpdate(
       { userId: req.user.id },
@@ -109,13 +137,18 @@ router.put("/orders/:orderId/cancel", protect, async (req, res) => {
     order.status = "Cancelled";
     await order.save();
 
-    order.items.forEach(async (item) => {
-      const product = await Product.findById(item.product._id);
-      if (product) {
-        product.stock += item.quantity;
-        await product.save();
-      }
-    });
+    // ------------------------------------------------------------------------
+    // ATOMIC INVENTORY STOCK RESTORATION:
+    // Restores stock atomically at MongoDB engine level when order is cancelled.
+    // ------------------------------------------------------------------------
+    await Promise.all(
+      order.items.map((item) => {
+        const productId = item.product?._id || item.product;
+        return Product.findByIdAndUpdate(productId, {
+          $inc: { stock: item.quantity }
+        });
+      })
+    );
     await createLog(req, "ORDER_CANCELLED", { order });
     res.json({ message: "Order cancelled successfully", order });
   } catch (err) {
