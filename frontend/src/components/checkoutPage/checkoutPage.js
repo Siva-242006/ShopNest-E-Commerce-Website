@@ -36,7 +36,7 @@ const CheckoutPage = () => {
   };
 
   const totalAmount = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => (item && item.product ? sum + (item.product.price || 0) * item.quantity : sum),
     0
   );
 
@@ -133,7 +133,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="order-page-cart-container">
-                  {cartItems.map((item) => (
+                  {cartItems.filter(item => item && item.product).map((item) => (
                     <div key={item.product._id} className="order-page-cart-items">
                       <div className="checkout-img-wrap">
                         <img src={item.product.image} alt={item.product.name} className="checkout-img" />
