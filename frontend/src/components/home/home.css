@@ -51,7 +51,10 @@
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .hero-section button:hover,
@@ -99,7 +102,10 @@
   color: #1f2937;
   cursor: pointer;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
-  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .category-card span {
@@ -141,7 +147,10 @@
   border-radius: 14px;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
   text-align: center;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
   animation: zoomIn 0.45s ease-in;
 }
 

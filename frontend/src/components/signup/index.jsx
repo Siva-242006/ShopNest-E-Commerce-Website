@@ -1,61 +1,68 @@
-import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { FaEnvelope, FaLock, FaRegEye, FaRegEyeSlash, FaUser, FaUserTag } from "react-icons/fa"
-import "./index.css"
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  FaEnvelope,
+  FaLock,
+  FaRegEye,
+  FaRegEyeSlash,
+  FaUser,
+  FaUserTag,
+} from 'react-icons/fa';
+import './index.css';
 
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    username: "",
-    password: "",
-    role: "User",
-  })
+    name: '',
+    email: '',
+    username: '',
+    password: '',
+    role: 'User',
+  });
 
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    document.title = "Signup Page"
-  }, [])
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt_token")
+    document.title = 'Signup Page';
+  }, []);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt_token');
     if (jwt) {
-      navigate("/")
+      navigate('/');
     }
-  }, [navigate])
+  }, [navigate]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError("")
-    setSuccess("")
-    setIsSubmitting(true)
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setIsSubmitting(true);
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long.")
-      setIsSubmitting(false)
-      return
+      setError('Password must be at least 6 characters long.');
+      setIsSubmitting(false);
+      return;
     }
 
     if (!isValidEmail(formData.email)) {
-      setError("Please enter a valid email address.")
-      setIsSubmitting(false)
-      return
+      setError('Please enter a valid email address.');
+      setIsSubmitting(false);
+      return;
     }
 
     const updatedFormData = {
@@ -64,33 +71,33 @@ const Signup = () => {
       username: formData.username.trim().toLowerCase(),
       password: formData.password,
       role: formData.role,
-    }
+    };
 
     try {
       const response = await fetch(`${apiUrl}/signup`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedFormData),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.msg || "Signup failed")
+        throw new Error(data.msg || 'Signup failed');
       }
 
-      setSuccess("Signup successful! Redirecting to login...")
+      setSuccess('Signup successful! Redirecting to login...');
       setTimeout(() => {
-        navigate("/login")
-      }, 1500)
+        navigate('/login');
+      }, 1500);
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="signup-container">
@@ -160,7 +167,7 @@ const Signup = () => {
           <div className="signup-input-wrapper">
             <FaLock className="signup-input-icon" aria-hidden="true" />
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               placeholder="Minimum 6 characters"
@@ -176,7 +183,7 @@ const Signup = () => {
               className="signup-password-toggle"
               onClick={() => setShowPassword((prev) => !prev)}
               disabled={isSubmitting}
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
             </button>
@@ -203,16 +210,18 @@ const Signup = () => {
               Creating account...
             </span>
           ) : (
-            "Create account"
+            'Create account'
           )}
         </button>
 
         {error && <p className="error">{error}</p>}
         {success && <p className="success">{success}</p>}
       </form>
-      <p className="login-link">Already have an account? <Link to="/login">Login</Link></p>
+      <p className="login-link">
+        Already have an account? <Link to="/login">Login</Link>
+      </p>
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;

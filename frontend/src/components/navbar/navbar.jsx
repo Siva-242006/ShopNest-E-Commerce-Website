@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
-import { useCart } from "../../context/CartContext";
-import { useUserDetails } from "../../context/UserContext";
-import "./navbar.css";
+import { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { useCart } from '../../context/CartContext';
+import { useUserDetails } from '../../context/UserContext';
+import './navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -11,17 +11,18 @@ const Navbar = () => {
   const { cartCount } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const token = localStorage.getItem("jwt_token");
+  const token = localStorage.getItem('jwt_token');
 
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("jwt_token");
+    localStorage.removeItem('jwt_token');
     closeMenu();
-    navigate("/login");
+    navigate('/login');
   };
 
-  const linkClassName = ({ isActive }) => (isActive ? "link active-link" : "link");
+  const linkClassName = ({ isActive }) =>
+    isActive ? 'link active-link' : 'link';
 
   return (
     <nav className="site-navbar">
@@ -33,32 +34,34 @@ const Navbar = () => {
         type="button"
         className="nav-toggle"
         onClick={() => setIsMenuOpen((prev) => !prev)}
-        aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-label={
+          isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
+        }
         aria-expanded={isMenuOpen}
       >
         {isMenuOpen ? <FaTimes /> : <FaBars />}
       </button>
 
-      <div className={`nav-links ${isMenuOpen ? "nav-links-open" : ""}`}>
+      <div className={`nav-links ${isMenuOpen ? 'nav-links-open' : ''}`}>
         <NavLink to="/products" className={linkClassName} onClick={closeMenu}>
           Products
         </NavLink>
-        {role === "User" && (
+        {role === 'User' && (
           <NavLink to="/cart" className={linkClassName} onClick={closeMenu}>
             Cart <span className="cart-count">{cartCount}</span>
           </NavLink>
         )}
-        {role === "User" && (
+        {role === 'User' && (
           <NavLink to="/orders" className={linkClassName} onClick={closeMenu}>
             My Orders
           </NavLink>
         )}
-        {role === "Admin" && (
+        {role === 'Admin' && (
           <NavLink to="/orders" className={linkClassName} onClick={closeMenu}>
             Orders
           </NavLink>
         )}
-        {role === "Admin" && (
+        {role === 'Admin' && (
           <NavLink to="/logs" className={linkClassName} onClick={closeMenu}>
             Logs
           </NavLink>

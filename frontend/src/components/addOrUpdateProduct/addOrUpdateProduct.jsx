@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useUserDetails } from "../../context/UserContext";
-import Navbar from "../navbar/navbar";
-import "./addOrUpdateProduct.css";
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useUserDetails } from '../../context/UserContext';
+import Navbar from '../navbar/navbar';
+import './addOrUpdateProduct.css';
 
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const AddOrUpdateProductForm = () => {
   const { id } = useParams();
@@ -12,20 +12,20 @@ const AddOrUpdateProductForm = () => {
   const { role } = useUserDetails();
 
   const [product, setProduct] = useState({
-    name: "",
-    description: "",
-    price: "",
-    image: "",
-    brand: "",
-    category: "",
-    stock: "",
+    name: '',
+    description: '',
+    price: '',
+    image: '',
+    brand: '',
+    category: '',
+    stock: '',
   });
 
   const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState("");
+  const [newCategory, setNewCategory] = useState('');
   const [isAddingNewCategory, setIsAddingNewCategory] = useState(false);
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const AddOrUpdateProductForm = () => {
           setLoading(false);
         })
         .catch(() => {
-          setError("Failed to load product");
+          setError('Failed to load product');
           setLoading(false);
         });
     }
@@ -58,7 +58,7 @@ const AddOrUpdateProductForm = () => {
 
   const handleCategoryChange = async (e) => {
     const value = e.target.value;
-    if (value === "add-new") {
+    if (value === 'add-new') {
       setIsAddingNewCategory(true);
     } else {
       setIsAddingNewCategory(false);
@@ -71,47 +71,48 @@ const AddOrUpdateProductForm = () => {
 
     try {
       const res = await fetch(`${apiUrl}/categories`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newCategory }),
       });
 
       const data = await res.json();
       setCategories((prev) => [...prev, data]);
       setProduct((prev) => ({ ...prev, category: data.name }));
-      setNewCategory("");
+      setNewCategory('');
       setIsAddingNewCategory(false);
     } catch (err) {
-      alert("Error adding category");
+      console.error(err);
+      alert('Error adding category');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
 
-    const method = id ? "PUT" : "POST";
+    const method = id ? 'PUT' : 'POST';
     const url = id
       ? `${apiUrl}/products/update/${id}`
       : `${apiUrl}/products/add`;
 
     try {
-      const token = localStorage.getItem("jwt_token");
+      const token = localStorage.getItem('jwt_token');
       const response = await fetch(url, {
         method,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(product),
       });
 
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Something went wrong");
+      if (!response.ok) throw new Error(data.message || 'Something went wrong');
 
-      alert(data.message || "Product saved successfully");
-      navigate("/products");
+      alert(data.message || 'Product saved successfully');
+      navigate('/products');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -119,12 +120,14 @@ const AddOrUpdateProductForm = () => {
     }
   };
 
-  if (role !== "Admin") {
+  if (role !== 'Admin') {
     return (
       <>
         <Navbar />
         <div className="admin-product-page">
-          <div className="admin-access-card">Access Denied: Only admins can manage products.</div>
+          <div className="admin-access-card">
+            Access Denied: Only admins can manage products.
+          </div>
         </div>
       </>
     );
@@ -136,8 +139,12 @@ const AddOrUpdateProductForm = () => {
       <div className="admin-product-page">
         <div className="form-container">
           <div className="form-header">
-            <h2 className="form-title">{id ? "Update" : "Add"} Product</h2>
-            <p>{id ? "Edit product details and inventory." : "Create a new product listing for your store."}</p>
+            <h2 className="form-title">{id ? 'Update' : 'Add'} Product</h2>
+            <p>
+              {id
+                ? 'Edit product details and inventory.'
+                : 'Create a new product listing for your store.'}
+            </p>
           </div>
           {loading ? (
             <p className="loading-text">Loading...</p>
@@ -145,35 +152,67 @@ const AddOrUpdateProductForm = () => {
             <form onSubmit={handleSubmit} className="product-form">
               <label>
                 Name
-                <input name="name" value={product.name} onChange={handleChange} required />
+                <input
+                  name="name"
+                  value={product.name}
+                  onChange={handleChange}
+                  required
+                />
               </label>
 
               <label>
                 Description
-                <textarea name="description" value={product.description} onChange={handleChange} required />
+                <textarea
+                  name="description"
+                  value={product.description}
+                  onChange={handleChange}
+                  required
+                />
               </label>
 
               <label>
                 Price
-                <input type="number" name="price" value={product.price} onChange={handleChange} required />
+                <input
+                  type="number"
+                  name="price"
+                  value={product.price}
+                  onChange={handleChange}
+                  required
+                />
               </label>
 
               <label>
                 Image URL
-                <input name="image" value={product.image} onChange={handleChange} required />
+                <input
+                  name="image"
+                  value={product.image}
+                  onChange={handleChange}
+                  required
+                />
               </label>
 
               <label>
                 Brand
-                <input name="brand" value={product.brand} onChange={handleChange} required />
+                <input
+                  name="brand"
+                  value={product.brand}
+                  onChange={handleChange}
+                  required
+                />
               </label>
 
               <label>
                 Category
-                <select value={product.category} onChange={handleCategoryChange} required>
+                <select
+                  value={product.category}
+                  onChange={handleCategoryChange}
+                  required
+                >
                   <option value="">Select Category</option>
                   {categories.map((cat) => (
-                    <option key={cat._id} value={cat.name}>{cat.name}</option>
+                    <option key={cat._id} value={cat.name}>
+                      {cat.name}
+                    </option>
                   ))}
                   <option value="add-new">Add New Category</option>
                 </select>
@@ -195,11 +234,17 @@ const AddOrUpdateProductForm = () => {
 
               <label>
                 Stock
-                <input type="number" name="stock" value={product.stock} onChange={handleChange} required />
+                <input
+                  type="number"
+                  name="stock"
+                  value={product.stock}
+                  onChange={handleChange}
+                  required
+                />
               </label>
 
               <button type="submit" className="submit-btn" disabled={loading}>
-                {id ? "Update" : "Add"} Product
+                {id ? 'Update' : 'Add'} Product
               </button>
             </form>
           )}

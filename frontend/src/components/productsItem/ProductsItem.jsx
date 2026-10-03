@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
-import { useCart } from "../../context/CartContext";
-import { useUserDetails } from "../../context/UserContext";
-import Navbar from "../navbar/navbar";
-import "./productItem.css";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FaStar } from 'react-icons/fa';
+import { useCart } from '../../context/CartContext';
+import { useUserDetails } from '../../context/UserContext';
+import Navbar from '../navbar/navbar';
+import './productItem.css';
 
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const ProductItem = () => {
   const { id } = useParams();
@@ -16,15 +16,15 @@ const ProductItem = () => {
 
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(true);
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
   useEffect(() => {
-    document.title = "E-Commerce Website";
-    const jwt = localStorage.getItem("jwt_token");
-    if (!jwt) navigate("/login");
+    document.title = 'E-Commerce Website';
+    const jwt = localStorage.getItem('jwt_token');
+    if (!jwt) navigate('/login');
   }, [navigate]);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const ProductItem = () => {
         const data = await res.json();
         setProduct(data);
       } catch (err) {
-        console.error("Fetch failed", err);
+        console.error('Fetch failed', err);
       } finally {
         setLoading(false);
       }
@@ -53,15 +53,15 @@ const ProductItem = () => {
 
   const handleAddToCart = async () => {
     if (product.stock <= 0) {
-      alert("Sorry, this product is out of stock.");
+      alert('Sorry, this product is out of stock.');
       return;
     }
 
     try {
       const response = await fetch(`${apiUrl}/cart/add`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId,
@@ -75,11 +75,11 @@ const ProductItem = () => {
         await fetchCart();
         alert(`${quantity} ${product.name} added to cart.`);
       } else {
-        alert(data.message || "Failed to add product to cart.");
+        alert(data.message || 'Failed to add product to cart.');
       }
     } catch (error) {
-      console.error("Error adding to cart:", error);
-      alert("Something went wrong. Please try again.");
+      console.error('Error adding to cart:', error);
+      alert('Something went wrong. Please try again.');
     }
   };
 
@@ -88,35 +88,35 @@ const ProductItem = () => {
     setReviewSubmitting(true);
 
     try {
-      const token = localStorage.getItem("jwt_token");
+      const token = localStorage.getItem('jwt_token');
       await fetch(`${apiUrl}/products/${id}/reviews`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ rating, comment }),
       });
 
-      setComment("");
+      setComment('');
       setRating(0);
       const res = await fetch(`${apiUrl}/products/${id}`);
       const data = await res.json();
       setProduct(data);
     } catch (err) {
-      console.error("Review error", err);
+      console.error('Review error', err);
     } finally {
       setReviewSubmitting(false);
     }
   };
 
   const handleDeleteReview = async (reviewId) => {
-    if (!window.confirm("Delete this review?")) return;
+    if (!window.confirm('Delete this review?')) return;
 
     try {
-      const token = localStorage.getItem("jwt_token");
+      const token = localStorage.getItem('jwt_token');
       await fetch(`${apiUrl}/products/${id}/reviews/${reviewId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -126,7 +126,7 @@ const ProductItem = () => {
       const data = await res.json();
       setProduct(data);
     } catch (err) {
-      console.error("Delete review error", err);
+      console.error('Delete review error', err);
     }
   };
 
@@ -145,12 +145,20 @@ const ProductItem = () => {
       <div className="product-item">
         <div className="product-item-image-wrap">
           {product.stock <= 5 && product.stock > 0 && (
-            <span className="product-item-stock-badge">Only {product.stock} left</span>
+            <span className="product-item-stock-badge">
+              Only {product.stock} left
+            </span>
           )}
-          <img src={product.image} alt={product.name} className="product-item-product-image" />
+          <img
+            src={product.image}
+            alt={product.name}
+            className="product-item-product-image"
+          />
         </div>
 
-        <div className={`product-details ${role === "Admin" ? "product-details-admin" : ""}`}>
+        <div
+          className={`product-details ${role === 'Admin' ? 'product-details-admin' : ''}`}
+        >
           <div>
             <div className="product-item-meta-row">
               <span>{product.brand}</span>
@@ -163,12 +171,15 @@ const ProductItem = () => {
           <div className="product-item-summary">
             <div>
               <span className="summary-label">Price</span>
-              <strong className="product-item-price">Rs. {product.price}</strong>
+              <strong className="product-item-price">
+                Rs. {product.price}
+              </strong>
             </div>
             <div>
               <span className="summary-label">Rating</span>
               <strong className="product-item-rating">
-                <FaStar aria-hidden="true" /> {(product.avgRating || 0).toFixed(1)} / 5
+                <FaStar aria-hidden="true" />{' '}
+                {(product.avgRating || 0).toFixed(1)} / 5
               </strong>
             </div>
             <div>
@@ -177,14 +188,23 @@ const ProductItem = () => {
             </div>
           </div>
 
-          {role === "User" && (
+          {role === 'User' && (
             <>
               <div className="quantity-selector">
                 <label>Quantity</label>
                 <div className="quantity-controls">
                   <button onClick={onDecrement}>-</button>
-                  <input value={quantity} readOnly className="quantity-display" />
-                  <button onClick={onIncrement} disabled={quantity >= product.stock}>+</button>
+                  <input
+                    value={quantity}
+                    readOnly
+                    className="quantity-display"
+                  />
+                  <button
+                    onClick={onIncrement}
+                    disabled={quantity >= product.stock}
+                  >
+                    +
+                  </button>
                 </div>
               </div>
 
@@ -202,12 +222,19 @@ const ProductItem = () => {
           product.reviews.map((rev) => (
             <div key={rev._id} className="review-card">
               <div className="review-header">
-                <strong>{rev.name.charAt(0).toUpperCase() + rev.name.slice(1)}</strong>
-                <span><FaStar aria-hidden="true" /> {rev.rating}/5</span>
+                <strong>
+                  {rev.name.charAt(0).toUpperCase() + rev.name.slice(1)}
+                </strong>
+                <span>
+                  <FaStar aria-hidden="true" /> {rev.rating}/5
+                </span>
               </div>
               <p>{rev.comment}</p>
-              {(rev.user_id === userId || role === "Admin") && (
-                <button className="delete-review" onClick={() => handleDeleteReview(rev._id)}>
+              {(rev.user_id === userId || role === 'Admin') && (
+                <button
+                  className="delete-review"
+                  onClick={() => handleDeleteReview(rev._id)}
+                >
                   Delete
                 </button>
               )}
@@ -217,24 +244,34 @@ const ProductItem = () => {
           <p className="reviews-empty-state">No reviews yet.</p>
         )}
 
-        {role === "User" && (
+        {role === 'User' && (
           <form onSubmit={handleReviewSubmit} className="review-form">
             <h4>Leave a Review</h4>
             <label>
               Rating:
-              <select value={rating} onChange={(e) => setRating(Number(e.target.value))} required>
+              <select
+                value={rating}
+                onChange={(e) => setRating(Number(e.target.value))}
+                required
+              >
                 <option value="">Select</option>
                 {[1, 2, 3, 4, 5].map((ratingValue) => (
-                  <option key={ratingValue} value={ratingValue}>{ratingValue}</option>
+                  <option key={ratingValue} value={ratingValue}>
+                    {ratingValue}
+                  </option>
                 ))}
               </select>
             </label>
             <label>
               Comment:
-              <textarea value={comment} onChange={(e) => setComment(e.target.value)} required />
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                required
+              />
             </label>
             <button type="submit" disabled={reviewSubmitting}>
-              {reviewSubmitting ? "Submitting..." : "Submit Review"}
+              {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
             </button>
           </form>
         )}

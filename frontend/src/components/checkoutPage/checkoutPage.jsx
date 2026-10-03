@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaCheckCircle } from "react-icons/fa";
-import { useCart } from "../../context/CartContext";
-import { useUserDetails } from "../../context/UserContext";
-import DeliveryAddressForm from "../deliveryAddressForm/deliveryAddressForm";
-import Navbar from "../navbar/navbar";
-import "./checkoutPage.css";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaCheckCircle } from 'react-icons/fa';
+import { useCart } from '../../context/CartContext';
+import { useUserDetails } from '../../context/UserContext';
+import DeliveryAddressForm from '../deliveryAddressForm/deliveryAddressForm';
+import Navbar from '../navbar/navbar';
+import './checkoutPage.css';
 
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -19,16 +19,16 @@ const CheckoutPage = () => {
   const { userId } = useUserDetails();
 
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt_token");
+    const jwt = localStorage.getItem('jwt_token');
     if (!jwt) {
-      navigate("/login");
+      navigate('/login');
     }
   }, [navigate]);
 
   const handleAddressSubmit = (data) => {
     const order = {
       ...data,
-      status: "Pending",
+      status: 'Pending',
       orderDate: new Date().toLocaleString(),
     };
     setSubmittedAddress(order);
@@ -36,8 +36,11 @@ const CheckoutPage = () => {
   };
 
   const totalAmount = cartItems.reduce(
-    (sum, item) => (item && item.product ? sum + (item.product.price || 0) * item.quantity : sum),
-    0
+    (sum, item) =>
+      item && item.product
+        ? sum + (item.product.price || 0) * item.quantity
+        : sum,
+    0,
   );
 
   const handleProceed = async () => {
@@ -45,7 +48,7 @@ const CheckoutPage = () => {
     if (isPlacingOrder) return;
 
     if (!submittedAddress || cartItems.length === 0) {
-      return alert("Missing address or cart empty");
+      return alert('Missing address or cart empty');
     }
 
     setIsPlacingOrder(true);
@@ -59,21 +62,21 @@ const CheckoutPage = () => {
 
     try {
       const res = await fetch(`${apiUrl}/orders/add`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt_token")}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
         },
         body: JSON.stringify(orderData),
       });
 
-      if (!res.ok) throw new Error("Order failed");
+      if (!res.ok) throw new Error('Order failed');
 
       await clearCart();
       setIsProceed(true);
     } catch (err) {
       console.error(err.message);
-      alert("Something went wrong while placing order.");
+      alert('Something went wrong while placing order.');
     } finally {
       setIsPlacingOrder(false);
     }
@@ -98,14 +101,17 @@ const CheckoutPage = () => {
                 <FaCheckCircle className="success-icon" />
                 <h3>Order Placed Successfully</h3>
                 <p className="success-message">
-                  Thank you, {submittedAddress.fullName}! Your order has been placed and is now pending confirmation.
+                  Thank you, {submittedAddress.fullName}! Your order has been
+                  placed and is now pending confirmation.
                 </p>
 
                 <div className="success-details">
                   <div>
                     <span>Delivery Address</span>
                     <strong>
-                      {submittedAddress.street}, {submittedAddress.city}, {submittedAddress.state} - {submittedAddress.pincode}, {submittedAddress.country}
+                      {submittedAddress.street}, {submittedAddress.city},{' '}
+                      {submittedAddress.state} - {submittedAddress.pincode},{' '}
+                      {submittedAddress.country}
                     </strong>
                   </div>
                   <div>
@@ -119,8 +125,14 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="success-actions">
-                  <button type="button" onClick={() => navigate("/orders")}>View Orders</button>
-                  <button type="button" className="secondary-success-btn" onClick={() => navigate("/products")}>
+                  <button type="button" onClick={() => navigate('/orders')}>
+                    View Orders
+                  </button>
+                  <button
+                    type="button"
+                    className="secondary-success-btn"
+                    onClick={() => navigate('/products')}
+                  >
                     Continue Shopping
                   </button>
                 </div>
@@ -129,22 +141,34 @@ const CheckoutPage = () => {
               <div className="order-review-card">
                 <div className="checkout-header">
                   <h1>Review Order</h1>
-                  <p>Confirm your items and delivery details before placing the order.</p>
+                  <p>
+                    Confirm your items and delivery details before placing the
+                    order.
+                  </p>
                 </div>
 
                 <div className="order-page-cart-container">
-                  {cartItems.filter(item => item && item.product).map((item) => (
-                    <div key={item.product._id} className="order-page-cart-items">
-                      <div className="checkout-img-wrap">
-                        <img src={item.product.image} alt={item.product.name} className="checkout-img" />
+                  {cartItems
+                    .filter((item) => item && item.product)
+                    .map((item) => (
+                      <div
+                        key={item.product._id}
+                        className="order-page-cart-items"
+                      >
+                        <div className="checkout-img-wrap">
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            className="checkout-img"
+                          />
+                        </div>
+                        <div className="order-item-details">
+                          <h3>{item.product.name}</h3>
+                          <p>Quantity: {item.quantity}</p>
+                          <strong>Rs. {item.product.price}</strong>
+                        </div>
                       </div>
-                      <div className="order-item-details">
-                        <h3>{item.product.name}</h3>
-                        <p>Quantity: {item.quantity}</p>
-                        <strong>Rs. {item.product.price}</strong>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
 
                 <div className="order-total">
@@ -153,10 +177,19 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="checkout-buttons">
-                  <button type="button" className="proceed-button" onClick={handleProceed} disabled={isPlacingOrder}>
-                    {isPlacingOrder ? "Placing Order..." : "Place Order"}
+                  <button
+                    type="button"
+                    className="proceed-button"
+                    onClick={handleProceed}
+                    disabled={isPlacingOrder}
+                  >
+                    {isPlacingOrder ? 'Placing Order...' : 'Place Order'}
                   </button>
-                  <button type="button" className="back-button" onClick={() => navigate("/cart")}>
+                  <button
+                    type="button"
+                    className="back-button"
+                    onClick={() => navigate('/cart')}
+                  >
                     Back
                   </button>
                 </div>

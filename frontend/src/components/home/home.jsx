@@ -1,44 +1,44 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaHome, FaStar } from "react-icons/fa";
-import Navbar from "../navbar/navbar";
-import "./home.css";
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaHome, FaStar } from 'react-icons/fa';
+import Navbar from '../navbar/navbar';
+import './home.css';
 
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Home = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    document.title = "ShopNest | Your Ultimate Shopping Destination";
+    document.title = 'ShopNest | Your Ultimate Shopping Destination';
   }, []);
 
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt_token");
+    const jwt = localStorage.getItem('jwt_token');
     if (!jwt) {
-      navigate("/login");
+      navigate('/login');
     }
   }, [navigate]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true);
-      setError("");
+      setError('');
 
       try {
         const response = await fetch(`${apiUrl}/products`);
         if (!response.ok) {
-          throw new Error("Unable to load products");
+          throw new Error('Unable to load products');
         }
 
         const data = await response.json();
         setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error("Failed to load products", error);
-        setError("Failed to load products. Please try again.");
+        console.error('Failed to load products', error);
+        setError('Failed to load products. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -48,7 +48,7 @@ const Home = () => {
   }, []);
 
   const onClickHandler = () => {
-    navigate("/products");
+    navigate('/products');
     window.scrollTo(0, 0);
   };
 
@@ -66,14 +66,24 @@ const Home = () => {
   const topReviewed = [...availableProducts]
     .sort((a, b) => b.numReviews - a.numReviews)
     .slice(0, 5);
-  const categories = [...new Set(availableProducts.map((product) => product.category).filter(Boolean))].slice(0, 5);
+  const categories = [
+    ...new Set(
+      availableProducts.map((product) => product.category).filter(Boolean),
+    ),
+  ].slice(0, 5);
 
   const renderProducts = (items) =>
     items.length > 0 ? (
       items.map((item) => (
-        <Link to={`/products/${item._id}`} className="home-product-link" key={item._id}>
+        <Link
+          to={`/products/${item._id}`}
+          className="home-product-link"
+          key={item._id}
+        >
           <div className="home-product-card">
-            {item.stock <= 5 && <span className="limited-stock">Only {item.stock} left!</span>}
+            {item.stock <= 5 && (
+              <span className="limited-stock">Only {item.stock} left!</span>
+            )}
             <img src={item.image} alt={item.name} />
             <h4>{item.name}</h4>
             <div className="home-card-footer">
@@ -126,7 +136,11 @@ const Home = () => {
                     type="button"
                     className="category-card"
                     key={category}
-                    onClick={() => navigate(`/products?category=${encodeURIComponent(category)}`)}
+                    onClick={() =>
+                      navigate(
+                        `/products?category=${encodeURIComponent(category)}`,
+                      )
+                    }
                   >
                     <span>{category}</span>
                   </button>
@@ -144,17 +158,23 @@ const Home = () => {
 
           <section className="home-section">
             <h2>New Arrivals</h2>
-            <div className="home-products-row">{renderProducts(newArrivals)}</div>
+            <div className="home-products-row">
+              {renderProducts(newArrivals)}
+            </div>
           </section>
 
           <section className="home-section">
             <h2>Limited Stock</h2>
-            <div className="home-products-row">{renderProducts(limitedStock)}</div>
+            <div className="home-products-row">
+              {renderProducts(limitedStock)}
+            </div>
           </section>
 
           <section className="home-section">
             <h2>Top Reviewed</h2>
-            <div className="home-products-row">{renderProducts(topReviewed)}</div>
+            <div className="home-products-row">
+              {renderProducts(topReviewed)}
+            </div>
           </section>
         </div>
       )}

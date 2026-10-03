@@ -4,10 +4,10 @@ import {
   useEffect,
   useState,
   useCallback,
-} from "react";
-import { useUserDetails } from "./UserContext";
+} from 'react';
+import { useUserDetails } from './UserContext';
 
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const CartContext = createContext();
 
@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       const response = await fetch(`${apiUrl}/cart/${userId}`);
-      if (!response.ok) throw new Error("Failed to fetch cart");
+      if (!response.ok) throw new Error('Failed to fetch cart');
 
       const data = await response.json();
       const items = data.items || [];
@@ -29,7 +29,7 @@ export const CartProvider = ({ children }) => {
       setCartItems(items);
       setCartCount(items.length);
     } catch (err) {
-      console.error("Fetch cart error:", err);
+      console.error('Fetch cart error:', err);
     }
   }, [userId]);
 
@@ -38,14 +38,14 @@ export const CartProvider = ({ children }) => {
 
     try {
       const res = await fetch(`${apiUrl}/cart/${userId}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
-      if (!res.ok) throw new Error("Failed to clear cart");
+      if (!res.ok) throw new Error('Failed to clear cart');
 
       setCartItems([]);
       setCartCount(0);
     } catch (err) {
-      console.error("Clear cart error:", err);
+      console.error('Clear cart error:', err);
     }
   }, [userId]);
 

@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { useUserDetails } from "../../context/UserContext";
-import Navbar from "../navbar/navbar";
-import "./logsPage.css";
+import { useState, useEffect } from 'react';
+import { useUserDetails } from '../../context/UserContext';
+import Navbar from '../navbar/navbar';
+import './logsPage.css';
 
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Logs = () => {
   const { role } = useUserDetails();
@@ -17,10 +17,10 @@ const Logs = () => {
       setError(null);
 
       const res = await fetch(`${apiUrl}/logs`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt_token")}`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
+          'Content-Type': 'application/json',
         },
       });
 
@@ -29,50 +29,56 @@ const Logs = () => {
       const data = await res.json();
       setLogs(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("Error fetching logs:", err);
-      setError("Failed to fetch logs. You may not have permission.");
+      console.error('Error fetching logs:', err);
+      setError('Failed to fetch logs. You may not have permission.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteAllLogs = async () => {
-    if (!window.confirm("Are you sure you want to delete all logs? This cannot be undone.")) {
+    if (
+      !window.confirm(
+        'Are you sure you want to delete all logs? This cannot be undone.',
+      )
+    ) {
       return;
     }
 
     try {
       const res = await fetch(`${apiUrl}/logs`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt_token")}`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
+          'Content-Type': 'application/json',
         },
       });
 
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
       setLogs([]);
-      alert("All logs deleted successfully!");
+      alert('All logs deleted successfully!');
     } catch (err) {
-      console.error("Error deleting logs:", err);
-      alert("Failed to delete logs.");
+      console.error('Error deleting logs:', err);
+      alert('Failed to delete logs.');
     }
   };
 
   useEffect(() => {
-    if (role === "Admin") {
+    if (role === 'Admin') {
       fetchLogs();
     } else {
       setLoading(false);
     }
   }, [role]);
 
-  if (role !== "Admin") {
+  if (role !== 'Admin') {
     return (
       <>
         <Navbar />
-        <div className="logs-container">Access Denied: Only admins can view logs.</div>
+        <div className="logs-container">
+          Access Denied: Only admins can view logs.
+        </div>
       </>
     );
   }
