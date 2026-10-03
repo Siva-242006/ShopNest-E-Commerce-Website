@@ -36,7 +36,7 @@ const Login = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: username, password }),
     };
-
+console.log(apiUrl);
     try {
       const res = await fetch(`${apiUrl}/login`, options);
       const data = await res.json();
