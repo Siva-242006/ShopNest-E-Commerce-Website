@@ -140,7 +140,10 @@
   cursor: pointer;
   font-size: 15px;
   font-weight: 800;
-  transition: transform 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .proceed-button,

@@ -153,11 +153,21 @@
   border-radius: 50%;
 }
 
-.status-pending { background-color: #f59e0b; }
-.status-confirmed { background-color: #2563eb; }
-.status-shipped { background-color: #7c3aed; }
-.status-delivered { background-color: #16a34a; }
-.status-cancelled { background-color: #dc2626; }
+.status-pending {
+  background-color: #f59e0b;
+}
+.status-confirmed {
+  background-color: #2563eb;
+}
+.status-shipped {
+  background-color: #7c3aed;
+}
+.status-delivered {
+  background-color: #16a34a;
+}
+.status-cancelled {
+  background-color: #dc2626;
+}
 
 .order-total-text {
   color: #2563eb;

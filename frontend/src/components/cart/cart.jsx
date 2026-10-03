@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
-import { useUserDetails } from "../../context/UserContext";
-import Navbar from "../navbar/navbar";
-import "./cart.css";
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
+import { useUserDetails } from '../../context/UserContext';
+import Navbar from '../navbar/navbar';
+import './cart.css';
 
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const CartPage = () => {
   const [cartList, setCartList] = useState([]);
@@ -32,18 +32,18 @@ const CartPage = () => {
         setCartList([]);
       }
     } catch (err) {
-      console.error("Failed to load cart", err);
+      console.error('Failed to load cart', err);
     }
   }, [userId]);
 
   useEffect(() => {
-    document.title = "Cart";
+    document.title = 'Cart';
   }, []);
 
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt_token");
+    const jwt = localStorage.getItem('jwt_token');
     if (!jwt) {
-      navigate("/login");
+      navigate('/login');
     } else {
       fetchCart();
     }
@@ -65,8 +65,8 @@ const CartPage = () => {
   const updateQuantity = async (productId, quantity) => {
     try {
       const res = await fetch(`${apiUrl}/cart/update`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, productId, quantity }),
       });
       if (res.ok) {
@@ -74,34 +74,34 @@ const CartPage = () => {
         fetchCart();
       }
     } catch (err) {
-      console.error("Error updating quantity", err);
+      console.error('Error updating quantity', err);
     }
   };
 
   const deleteProduct = async (productId) => {
     try {
       const res = await fetch(`${apiUrl}/cart/${userId}/${productId}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
       if (res.ok) {
         fetchCart();
       }
     } catch (err) {
-      console.error("Error deleting product", err);
+      console.error('Error deleting product', err);
     }
   };
 
   const clearCart = async () => {
     try {
       const res = await fetch(`${apiUrl}/cart/${userId}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
       if (res.ok) {
         setCartList([]);
         setQuantities({});
       }
     } catch (err) {
-      console.error("Error clearing cart", err);
+      console.error('Error clearing cart', err);
     }
   };
 
@@ -120,8 +120,8 @@ const CartPage = () => {
   };
 
   const onCheckoutClick = () => {
-    alert("Proceeding to checkout...");
-    navigate("/checkout");
+    alert('Proceeding to checkout...');
+    navigate('/checkout');
   };
 
   return (
@@ -139,7 +139,7 @@ const CartPage = () => {
               <div className="cart-empty-state">
                 <h2>Your cart is empty.</h2>
                 <p>Add products to your cart and they will appear here.</p>
-                <button type="button" onClick={() => navigate("/products")}>
+                <button type="button" onClick={() => navigate('/products')}>
                   Browse Products
                 </button>
               </div>
@@ -148,7 +148,11 @@ const CartPage = () => {
                 {cartList.map((item) => (
                   <div key={item.product._id} className="cart-item">
                     <div className="cart-item-image-wrap">
-                      <img src={item.product.image} alt={item.product.name} className="cart-item-image" />
+                      <img
+                        src={item.product.image}
+                        alt={item.product.name}
+                        className="cart-item-image"
+                      />
                     </div>
 
                     <div className="cart-item-details">
@@ -158,12 +162,15 @@ const CartPage = () => {
                       </div>
 
                       <p className="cart-item-price">
-                        Rs. {item.product.price.toLocaleString()} {item.product.currency}
+                        Rs. {item.product.price.toLocaleString()}{' '}
+                        {item.product.currency}
                       </p>
 
                       <div className="cart-item-actions">
                         <div className="quantity-controls">
-                          <button onClick={() => onDecrement(item.product._id)}>-</button>
+                          <button onClick={() => onDecrement(item.product._id)}>
+                            -
+                          </button>
                           <input
                             type="text"
                             value={quantities[item.product._id] || 1}
@@ -171,14 +178,21 @@ const CartPage = () => {
                             className="quantity-display"
                           />
                           <button
-                            onClick={() => onIncrement(item.product._id, item.product.stock)}
-                            disabled={quantities[item.product._id] >= item.product.stock}
+                            onClick={() =>
+                              onIncrement(item.product._id, item.product.stock)
+                            }
+                            disabled={
+                              quantities[item.product._id] >= item.product.stock
+                            }
                           >
                             +
                           </button>
                         </div>
 
-                        <button className="delete-button" onClick={() => deleteProduct(item.product._id)}>
+                        <button
+                          className="delete-button"
+                          onClick={() => deleteProduct(item.product._id)}
+                        >
                           Delete
                         </button>
                       </div>
@@ -199,11 +213,19 @@ const CartPage = () => {
               <span>Total Price</span>
               <strong>Rs. {totalPrice.toLocaleString()}</strong>
             </div>
-            <button onClick={clearCart} className="clear-cart-button" disabled={cartList.length === 0}>
+            <button
+              onClick={clearCart}
+              className="clear-cart-button"
+              disabled={cartList.length === 0}
+            >
               Clear Cart
             </button>
             <button
-              onClick={() => (cartList.length > 0 ? onCheckoutClick() : alert("Cart is Empty."))}
+              onClick={() =>
+                cartList.length > 0
+                  ? onCheckoutClick()
+                  : alert('Cart is Empty.')
+              }
               className="checkout-button"
             >
               Checkout

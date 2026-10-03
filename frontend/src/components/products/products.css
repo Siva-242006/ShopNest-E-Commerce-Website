@@ -46,7 +46,10 @@
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .add-button:hover {
@@ -61,7 +64,10 @@
   margin: 0 auto 30px;
   padding: 16px;
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(190px, 240px) minmax(190px, 240px);
+  grid-template-columns: minmax(260px, 1fr) minmax(190px, 240px) minmax(
+      190px,
+      240px
+    );
   gap: 14px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -93,7 +99,10 @@
   color: #1f2937;
   font-size: 15px;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .products-search-input {
@@ -129,7 +138,10 @@
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .product-card:hover {
@@ -284,7 +296,10 @@
   font-size: 14px;
   font-weight: 800;
   text-align: center;
-  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .product-edit-btn {

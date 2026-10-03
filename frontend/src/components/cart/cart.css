@@ -140,7 +140,9 @@
   cursor: pointer;
   font-size: 17px;
   font-weight: 800;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .quantity-controls button:hover:not(:disabled) {
@@ -175,7 +177,9 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 800;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .delete-button:hover {
@@ -228,7 +232,10 @@
   cursor: pointer;
   font-size: 15px;
   font-weight: 800;
-  transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .clear-cart-button {

@@ -1,45 +1,45 @@
-import { useEffect, useState } from "react";
-import "./deliveryAddressForm.css";
+import { useEffect, useState } from 'react';
+import './deliveryAddressForm.css';
 
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const DeliveryAddressForm = ({ onAddressSubmit }) => {
   const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    street: "",
-    landmark: "",
-    city: "",
-    state: "",
-    otherState: "",
-    pincode: "",
-    country: "India",
+    fullName: '',
+    phone: '',
+    street: '',
+    landmark: '',
+    city: '',
+    state: '',
+    otherState: '',
+    pincode: '',
+    country: 'India',
   });
 
   const [errors, setErrors] = useState({});
   const [previousAddresses, setPreviousAddresses] = useState([]);
 
   const statesList = [
-    "Tamil Nadu",
-    "Kerala",
-    "Karnataka",
-    "Maharashtra",
-    "Delhi",
-    "Other",
+    'Tamil Nadu',
+    'Kerala',
+    'Karnataka',
+    'Maharashtra',
+    'Delhi',
+    'Other',
   ];
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const res = await fetch(`${apiUrl}/orders/my-orders`, {
-          method: "GET",
+          method: 'GET',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("jwt_token")}`,
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
           },
         });
 
-        if (!res.ok) throw new Error("Failed to fetch orders");
+        if (!res.ok) throw new Error('Failed to fetch orders');
 
         const data = await res.json();
 
@@ -47,7 +47,7 @@ const DeliveryAddressForm = ({ onAddressSubmit }) => {
           ...new Set(
             data
               .map((order) => JSON.stringify(order.shippingAddress))
-              .filter((addr) => addr !== undefined)
+              .filter((addr) => addr !== undefined),
           ),
         ].map((str) => JSON.parse(str));
 
@@ -62,19 +62,22 @@ const DeliveryAddressForm = ({ onAddressSubmit }) => {
 
   const validate = () => {
     const errs = {};
-    if (!formData.fullName.trim()) errs.fullName = "Full name is required";
-    if (!/^\d{10}$/.test(formData.phone)) errs.phone = "Phone must be 10 digits";
-    if (!formData.street.trim()) errs.street = "Street is required";
-    if (!formData.city.trim()) errs.city = "City is required";
-    if (!formData.state.trim()) errs.state = "Please select or enter a state";
-    if (!/^\d{6}$/.test(formData.pincode)) errs.pincode = "Pincode must be 6 digits";
+    if (!formData.fullName.trim()) errs.fullName = 'Full name is required';
+    if (!/^\d{10}$/.test(formData.phone))
+      errs.phone = 'Phone must be 10 digits';
+    if (!formData.street.trim()) errs.street = 'Street is required';
+    if (!formData.city.trim()) errs.city = 'City is required';
+    if (!formData.state.trim()) errs.state = 'Please select or enter a state';
+    if (!/^\d{6}$/.test(formData.pincode))
+      errs.pincode = 'Pincode must be 6 digits';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const finalState = formData.state === "Other" ? formData.otherState : formData.state;
+    const finalState =
+      formData.state === 'Other' ? formData.otherState : formData.state;
     if (validate()) {
       const addressToSubmit = {
         fullName: formData.fullName,
@@ -97,14 +100,17 @@ const DeliveryAddressForm = ({ onAddressSubmit }) => {
 
   const handleSelectAddress = (e) => {
     const value = e.target.value;
-    if (value === "") return;
+    if (value === '') return;
 
     const selected = JSON.parse(value);
-    
+
     setFormData({
       ...selected,
-      otherState: selected.state !== statesList.includes(selected.state) ? selected.state : "",
-      state: statesList.includes(selected.state) ? selected.state : "Other",
+      otherState:
+        selected.state !== statesList.includes(selected.state)
+          ? selected.state
+          : '',
+      state: statesList.includes(selected.state) ? selected.state : 'Other',
     });
   };
 
@@ -128,7 +134,12 @@ const DeliveryAddressForm = ({ onAddressSubmit }) => {
 
       <div className="form-group">
         <label>Full Name:</label>
-        <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} />
+        <input
+          type="text"
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+        />
         {errors.fullName && <span className="error">{errors.fullName}</span>}
       </div>
 
@@ -146,18 +157,33 @@ const DeliveryAddressForm = ({ onAddressSubmit }) => {
 
       <div className="form-group">
         <label>Street Address:</label>
-        <input type="text" name="street" value={formData.street} onChange={handleChange} />
+        <input
+          type="text"
+          name="street"
+          value={formData.street}
+          onChange={handleChange}
+        />
         {errors.street && <span className="error">{errors.street}</span>}
       </div>
 
       <div className="form-group">
         <label>Landmark (Optional):</label>
-        <input type="text" name="landmark" value={formData.landmark} onChange={handleChange} />
+        <input
+          type="text"
+          name="landmark"
+          value={formData.landmark}
+          onChange={handleChange}
+        />
       </div>
 
       <div className="form-group">
         <label>City:</label>
-        <input type="text" name="city" value={formData.city} onChange={handleChange} />
+        <input
+          type="text"
+          name="city"
+          value={formData.city}
+          onChange={handleChange}
+        />
         {errors.city && <span className="error">{errors.city}</span>}
       </div>
 
@@ -171,7 +197,7 @@ const DeliveryAddressForm = ({ onAddressSubmit }) => {
             </option>
           ))}
         </select>
-        {formData.state === "Other" && (
+        {formData.state === 'Other' && (
           <input
             type="text"
             name="otherState"

@@ -40,7 +40,10 @@
   color: #1f2937;
   font-size: 15px;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .address-form input:focus,
@@ -77,7 +80,9 @@
   cursor: pointer;
   font-size: 15px;
   font-weight: 800;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .save-btn:hover {
