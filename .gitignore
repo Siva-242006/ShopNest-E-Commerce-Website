@@ -2,3 +2,5 @@ backend/.env
 frontend/.env
 .env
 backend/scripts
+node_modules
+newrelic_agent.log
