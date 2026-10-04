@@ -2,7 +2,7 @@
 
 ShopNest is a modern, production-oriented e-commerce web application engineered using the MERN stack (MongoDB Atlas, Express.js v5, React 19, Node.js). Built with a strong **System Design Mindset**, **Security-First Architecture**, and **Database Concurrency Controls**, ShopNest delivers a seamless shopping experience for customers and a secure management portal for store administrators.
 
-**Live URL** [https://shop-nest-e-commerce-website-n3qv.vercel.app/](https://shop-nest-e-commerce-website-f7vdy8fr1-siva-sivas-projects.vercel.app/)
+**Live URL** https://shop-nest-e-commerce-website.vercel.app/
 ---
 
 ## 🏗️ System Design & Architectural Principles
