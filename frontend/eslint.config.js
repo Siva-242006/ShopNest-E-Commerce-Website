@@ -7,7 +7,13 @@ import prettierConfig from 'eslint-config-prettier';
 
 export default [
   {
-    ignores: ['dist/**', 'build/**', 'node_modules/**'],
+    ignores: [
+      'dist/**',
+      'build/**',
+      'node_modules/**',
+      'coverage/**',
+      'test-results/**',
+    ],
   },
   js.configs.recommended,
   react.configs.flat.recommended,
@@ -46,7 +52,13 @@ export default [
     },
   },
   {
-    files: ['**/*.test.{js,jsx}', 'src/setupTests.{js,jsx}'],
+    files: [
+      '**/*.test.{js,jsx}',
+      '**/*.spec.{js,jsx}',
+      'src/test/**/*.{js,jsx}',
+      'tests/**/*.{js,jsx}',
+      'e2e/**/*.{js,jsx}',
+    ],
     languageOptions: {
       globals: {
         ...globals.jest,
