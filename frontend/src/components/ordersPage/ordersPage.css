@@ -316,3 +316,53 @@
     align-items: flex-start;
   }
 }
+
+/* Replaces framer-motion: card fade-in (opacity 0→1, y 10→0, 0.3s) */
+.order-card {
+  animation: orderFadeIn 0.3s ease both;
+}
+@keyframes orderFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Replaces AnimatePresence: expand/collapse (height 0↔auto, opacity, 0.3s) */
+.order-details-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.3s ease,
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+.order-details-wrap.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.3s ease,
+    opacity 0.3s ease,
+    visibility 0s;
+}
+.order-details-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .order-card {
+    animation: none;
+  }
+  .order-details-wrap,
+  .order-details-wrap.open {
+    transition: none;
+  }
+}

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { useUserDetails } from '../../context/UserContext';
 import Navbar from '../navbar/navbar';
 import './ordersPage.css';
@@ -153,12 +152,9 @@ const OrdersPage = () => {
             <p className="no-orders">No orders found.</p>
           ) : (
             filteredOrders.map((order) => (
-              <motion.div
+              <div
                 key={order._id}
                 className={`order-card ${expandedOrderId === order._id ? 'expanded' : ''}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
               >
                 <div className="order-header">
                   <span className="order-id">
@@ -250,15 +246,12 @@ const OrdersPage = () => {
                   </div>
                 )}
 
-                <AnimatePresence>
-                  {expandedOrderId === order._id && (
-                    <motion.div
-                      className="order-details"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
+                <div
+                  className={`order-details-wrap ${expandedOrderId === order._id ? 'open' : ''}`}
+                  aria-hidden={expandedOrderId !== order._id}
+                >
+                  <div className="order-details-inner">
+                    <div className="order-details">
                       <h4>Delivery Address</h4>
                       <p>
                         {order.shippingAddress?.fullName},{' '}
@@ -300,10 +293,10 @@ const OrdersPage = () => {
                           </li>
                         ))}
                       </ul>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))
           )}
         </div>
